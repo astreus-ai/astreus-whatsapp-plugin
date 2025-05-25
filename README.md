@@ -4,18 +4,19 @@ A WhatsApp integration plugin for the Astreus AI agent framework, allowing agent
 
 ## Features
 
-- **Official WhatsApp Cloud API**: Uses Meta's official WhatsApp Cloud API
+- **Official WhatsApp Cloud API**: Uses Meta's official WhatsApp Cloud API for reliable messaging
 - **Easy Authentication**: Simple token-based authentication with no QR code needed
 - **Business Account Integration**: Full integration with WhatsApp Business features
 - **Comprehensive WhatsApp Integration**: Send/receive messages, use templates, and more
 - **Media Support**: Send images, documents, audio, and other media types
 - **Interactive Messages**: Create rich interactions with buttons and list messages
-- **Standard Logging**: Consistent logging with the Astreus framework
+- **Enhanced Logging**: Detailed logging of WhatsApp operations for improved debugging
+- **Integration with Astreus Logger**: Consistent logging patterns with the core framework
 
 ## Installation
 
 ```bash
-npm install astreus-whatsapp-plugin
+npm install @astreus-ai/whatsapp-plugin
 ```
 
 ## Configuration
@@ -51,8 +52,8 @@ To get these values:
 ### Basic Usage
 
 ```typescript
-import { Agent } from 'astreus';
-import WhatsAppPlugin from 'astreus-whatsapp-plugin';
+import { createAgent } from 'astreus';
+import WhatsAppPlugin from '@astreus-ai/whatsapp-plugin';
 
 // Create a WhatsApp plugin instance
 const whatsAppPlugin = new WhatsAppPlugin();
@@ -61,21 +62,21 @@ const whatsAppPlugin = new WhatsAppPlugin();
 await whatsAppPlugin.init();
 
 // Create an agent with the WhatsApp plugin
-const agent = new Agent({
+const agent = await createAgent({
+  name: 'WhatsApp Agent',
+  description: 'An agent that can interact with WhatsApp',
   plugins: [whatsAppPlugin]
 });
 
 // Now the agent can use WhatsApp functionality
-const result = await agent.run(`
-  Send a WhatsApp message to +1234567890 saying "Hello, how are you?"
-`);
+const response = await agent.chat(`Send a WhatsApp message to +1234567890 saying "Hello, how are you?"`);
 ```
 
 ### Custom Configuration
 
 ```typescript
-import { Agent } from 'astreus';
-import WhatsAppPlugin from 'astreus-whatsapp-plugin';
+import { createAgent } from 'astreus';
+import WhatsAppPlugin from '@astreus-ai/whatsapp-plugin';
 
 // Create a plugin with custom configuration
 const whatsAppPlugin = new WhatsAppPlugin({
@@ -91,7 +92,9 @@ const whatsAppPlugin = new WhatsAppPlugin({
 await whatsAppPlugin.init();
 
 // Create an agent with the plugin
-const agent = new Agent({
+const agent = await createAgent({
+  name: 'WhatsApp Agent',
+  description: 'An agent that can interact with WhatsApp',
   plugins: [whatsAppPlugin]
 });
 ```
@@ -119,10 +122,22 @@ The plugin includes logging capabilities to help troubleshoot issues. You can ad
 For more details on the WhatsApp Cloud API, refer to Meta's official documentation:
 [WhatsApp Cloud API Documentation](https://developers.facebook.com/docs/whatsapp/cloud-api)
 
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## License
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-MIT 
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📬 Contact
+
+Astreus Team - [https://astreus.org](https://astreus.org)
+
+Project Link: [https://github.com/astreus-ai/astreus-whatsapp-plugin](https://github.com/astreus-ai/astreus-whatsapp-plugin) 

@@ -52,8 +52,13 @@ To get these values:
 ### Basic Usage
 
 ```typescript
-import { createAgent } from 'astreus';
+import { createAgent, createProvider, createMemory, createDatabase } from '@astreus-ai/astreus';
 import WhatsAppPlugin from '@astreus-ai/whatsapp-plugin';
+
+// Initialize database and memory
+const db = await createDatabase();
+const memory = await createMemory({ database: db });
+const provider = createProvider({ type: 'openai', model: 'gpt-4o-mini' });
 
 // Create a WhatsApp plugin instance
 const whatsAppPlugin = new WhatsAppPlugin();
@@ -65,8 +70,13 @@ await whatsAppPlugin.init();
 const agent = await createAgent({
   name: 'WhatsApp Agent',
   description: 'An agent that can interact with WhatsApp',
-  plugins: [whatsAppPlugin]
+  provider: provider,
+  memory: memory,
+  database: db
 });
+
+// Add WhatsApp plugin tools to the agent
+whatsAppPlugin.getTools().forEach(tool => agent.addTool(tool));
 
 // Now the agent can use WhatsApp functionality
 const response = await agent.chat(`Send a WhatsApp message to +1234567890 saying "Hello, how are you?"`);
@@ -75,8 +85,13 @@ const response = await agent.chat(`Send a WhatsApp message to +1234567890 saying
 ### Custom Configuration
 
 ```typescript
-import { createAgent } from 'astreus';
+import { createAgent, createProvider, createMemory, createDatabase } from '@astreus-ai/astreus';
 import WhatsAppPlugin from '@astreus-ai/whatsapp-plugin';
+
+// Initialize database and memory
+const db = await createDatabase();
+const memory = await createMemory({ database: db });
+const provider = createProvider({ type: 'openai', model: 'gpt-4o-mini' });
 
 // Create a plugin with custom configuration
 const whatsAppPlugin = new WhatsAppPlugin({
@@ -95,8 +110,13 @@ await whatsAppPlugin.init();
 const agent = await createAgent({
   name: 'WhatsApp Agent',
   description: 'An agent that can interact with WhatsApp',
-  plugins: [whatsAppPlugin]
+  provider: provider,
+  memory: memory,
+  database: db
 });
+
+// Add WhatsApp plugin tools to the agent
+whatsAppPlugin.getTools().forEach(tool => agent.addTool(tool));
 ```
 
 ## Available Tools

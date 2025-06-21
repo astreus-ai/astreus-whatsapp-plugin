@@ -65,9 +65,9 @@ export class WhatsAppPlugin implements PluginInstance {
       // Log a summary of tools
       this.logToolsSummary();
       
-      logger.success('WhatsApp Cloud API plugin initialized successfully');
+      logger.success("WhatsApp Plugin", "Initialization", 'WhatsApp Cloud API plugin initialized successfully');
     } catch (error) {
-      logger.error('Failed to initialize WhatsApp plugin:', error);
+      logger.error("WhatsApp Plugin", "Initialization", 'Failed to initialize WhatsApp plugin');
       throw new Error(`WhatsApp plugin initialization failed: ${error}`);
     }
   }
@@ -77,7 +77,7 @@ export class WhatsAppPlugin implements PluginInstance {
    */
   private logToolsSummary(): void {
     const toolNames = Array.from(this.tools.keys());
-    logger.info(`WhatsApp plugin registered ${toolNames.length} tools: ${toolNames.join(', ')}`);
+    logger.info("WhatsApp Plugin", "Tools", `Registered ${toolNames.length} tools: ${toolNames.join(', ')}`);
   }
 
   /**
@@ -144,7 +144,7 @@ export class WhatsAppPlugin implements PluginInstance {
             
             return result;
           } catch (error) {
-            logger.error(`Error executing tool ${manifest.name}:`, error);
+            logger.error("WhatsApp Plugin", "Tool", `Error executing tool ${manifest.name}: ${error}`);
             if (error instanceof Error) {
               throw error;
             } else {
@@ -434,7 +434,50 @@ export class WhatsAppPlugin implements PluginInstance {
    * Remove a tool
    */
   removeTool(name: string): boolean {
-    return this.tools.delete(name);
+    const result = this.tools.delete(name);
+    this.config.tools = Array.from(this.tools.values());
+    return result;
+  }
+
+  /**
+   * Check if a tool exists
+   */
+  hasTool(name: string): boolean {
+    return this.tools.has(name);
+  }
+
+  /**
+   * Get the number of registered tools
+   */
+  getToolCount(): number {
+    return this.tools.size;
+  }
+
+  /**
+   * Execute a tool by name
+   */
+  async executeTool(name: string, params: Record<string, any>): Promise<any> {
+    const tool = this.getTool(name);
+    if (!tool) {
+      throw new Error(`Tool ${name} not found`);
+    }
+    return await tool.execute(params);
+  }
+
+  /**
+   * Initialize all registered tools
+   */
+  async initializeAll(): Promise<void> {
+    // Initialize the plugin itself
+    await this.init();
+  }
+
+  /**
+   * Cleanup all registered tools
+   */
+  async cleanupAll(): Promise<void> {
+    // Cleanup the plugin itself
+    this.client = null;
   }
 
   /**
@@ -448,10 +491,10 @@ export class WhatsAppPlugin implements PluginInstance {
    * Debug the plugin interface
    */
   public debugPluginInterface(): boolean {
-    logger.info(`Plugin name: ${this.name}`);
-    logger.info(`Plugin description: ${this.description}`);
-    logger.info(`Client initialized: ${this.client !== null}`);
-    logger.info(`Tools registered: ${this.tools.size}`);
+    logger.info("WhatsApp Plugin", "Debug", `Plugin name: ${this.name}`);
+    logger.info("WhatsApp Plugin", "Debug", `Plugin description: ${this.description}`);
+    logger.info("WhatsApp Plugin", "Debug", `Client initialized: ${this.client !== null}`);
+    logger.info("WhatsApp Plugin", "Debug", `Tools registered: ${this.tools.size}`);
     return true;
   }
 
@@ -470,7 +513,7 @@ export class WhatsAppPlugin implements PluginInstance {
       const messageId = await this.client!.sendMessage(params.to, params.message);
       return { success: true, messageId };
     } catch (error) {
-      logger.error('Error sending WhatsApp message:', error);
+      logger.error("WhatsApp Plugin", "Message", 'Error sending WhatsApp message');
       throw error;
     }
   }
@@ -488,7 +531,7 @@ export class WhatsAppPlugin implements PluginInstance {
       const messageId = await this.client!.sendTemplateMessage(params as TemplateMessageOptions);
       return { success: true, messageId };
     } catch (error) {
-      logger.error('Error sending WhatsApp template message:', error);
+      logger.error("WhatsApp Plugin", "Template", 'Error sending WhatsApp template message');
       throw error;
     }
   }
@@ -506,7 +549,7 @@ export class WhatsAppPlugin implements PluginInstance {
       const messageId = await this.client!.sendMedia(params as MediaMessageOptions);
       return { success: true, messageId };
     } catch (error) {
-      logger.error('Error sending WhatsApp media:', error);
+      logger.error("WhatsApp Plugin", "Media", 'Error sending WhatsApp media');
       throw error;
     }
   }
@@ -524,7 +567,7 @@ export class WhatsAppPlugin implements PluginInstance {
       const messageId = await this.client!.sendInteractiveMessage(params as InteractiveMessageOptions);
       return { success: true, messageId };
     } catch (error) {
-      logger.error('Error sending WhatsApp interactive message:', error);
+      logger.error("WhatsApp Plugin", "Interactive", 'Error sending WhatsApp interactive message');
       throw error;
     }
   }
@@ -542,7 +585,7 @@ export class WhatsAppPlugin implements PluginInstance {
       const messageId = await this.client!.sendLocation(params as LocationMessageOptions);
       return { success: true, messageId };
     } catch (error) {
-      logger.error('Error sending WhatsApp location message:', error);
+      logger.error("WhatsApp Plugin", "Location", 'Error sending WhatsApp location message');
       throw error;
     }
   }
@@ -560,7 +603,7 @@ export class WhatsAppPlugin implements PluginInstance {
       const success = await this.client!.markMessageAsRead(params.messageId);
       return { success };
     } catch (error) {
-      logger.error('Error marking WhatsApp message as read:', error);
+      logger.error("WhatsApp Plugin", "Read Status", 'Error marking WhatsApp message as read');
       throw error;
     }
   }
@@ -577,7 +620,7 @@ export class WhatsAppPlugin implements PluginInstance {
     try {
       return await this.client!.getContactInfo(params.phoneNumber);
     } catch (error) {
-      logger.error('Error getting WhatsApp contact info:', error);
+      logger.error("WhatsApp Plugin", "Contact", 'Error getting WhatsApp contact info');
       throw error;
     }
   }
@@ -589,7 +632,7 @@ export class WhatsAppPlugin implements PluginInstance {
     try {
       return await this.client!.getBusinessProfile();
     } catch (error) {
-      logger.error('Error getting WhatsApp business profile:', error);
+      logger.error("WhatsApp Plugin", "Profile", 'Error getting WhatsApp business profile');
       throw error;
     }
   }
@@ -602,7 +645,7 @@ export class WhatsAppPlugin implements PluginInstance {
       const success = await this.client!.updateBusinessProfile(params);
       return { success };
     } catch (error) {
-      logger.error('Error updating WhatsApp business profile:', error);
+      logger.error("WhatsApp Plugin", "Profile", 'Error updating WhatsApp business profile');
       throw error;
     }
   }

@@ -1,6 +1,6 @@
 {
   "name": "@astreus-ai/whatsapp-plugin",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "WhatsApp integration plugin for Astreus",
   "author": "Astreus Team",
   "license": "MIT",
@@ -22,7 +22,7 @@
     "messaging"
   ],
   "dependencies": {
-    "@astreus-ai/astreus": "^0.1.4",
+    "@astreus-ai/astreus": "^0.2.9",
     "dotenv": "^16.5.0",
     "axios": "^1.6.2",
     "form-data": "^4.0.0"

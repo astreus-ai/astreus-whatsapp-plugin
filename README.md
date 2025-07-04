@@ -1,3 +1,5 @@
+![WhatsApp Plugin](src/assets/whatsapp-plugin.webp)
+
 # Astreus WhatsApp Plugin
 
 A WhatsApp integration plugin for the Astreus AI agent framework, allowing agents to interact with WhatsApp messaging using the official WhatsApp Cloud API.

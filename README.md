@@ -54,7 +54,7 @@ To get these values:
 ### Basic Usage
 
 ```typescript
-import { createAgent, createProvider, createMemory, createDatabase } from '@astreus-ai/astreus';
+import { createAgent, createProvider, createMemory, createDatabase, PluginManager } from '@astreus-ai/astreus';
 import WhatsAppPlugin from '@astreus-ai/whatsapp-plugin';
 
 // Initialize database and memory
@@ -68,17 +68,21 @@ const whatsAppPlugin = new WhatsAppPlugin();
 // Initialize the plugin
 await whatsAppPlugin.init();
 
-// Create an agent with the WhatsApp plugin
+// Create a plugin manager and add the WhatsApp plugin
+const pluginManager = new PluginManager({
+  name: 'messaging-plugins',
+  tools: whatsAppPlugin.getTools()
+});
+
+// Create an agent with the plugin manager
 const agent = await createAgent({
   name: 'WhatsApp Agent',
   description: 'An agent that can interact with WhatsApp',
   provider: provider,
   memory: memory,
-  database: db
+  database: db,
+  plugins: [pluginManager]
 });
-
-// Add WhatsApp plugin tools to the agent
-whatsAppPlugin.getTools().forEach(tool => agent.addTool(tool));
 
 // Now the agent can use WhatsApp functionality
 const response = await agent.chat(`Send a WhatsApp message to +1234567890 saying "Hello, how are you?"`);
@@ -87,7 +91,7 @@ const response = await agent.chat(`Send a WhatsApp message to +1234567890 saying
 ### Custom Configuration
 
 ```typescript
-import { createAgent, createProvider, createMemory, createDatabase } from '@astreus-ai/astreus';
+import { createAgent, createProvider, createMemory, createDatabase, PluginManager } from '@astreus-ai/astreus';
 import WhatsAppPlugin from '@astreus-ai/whatsapp-plugin';
 
 // Initialize database and memory
@@ -108,17 +112,21 @@ const whatsAppPlugin = new WhatsAppPlugin({
 // Initialize the plugin
 await whatsAppPlugin.init();
 
-// Create an agent with the plugin
+// Create a plugin manager and add the WhatsApp plugin
+const pluginManager = new PluginManager({
+  name: 'messaging-plugins',
+  tools: whatsAppPlugin.getTools()
+});
+
+// Create an agent with the plugin manager
 const agent = await createAgent({
   name: 'WhatsApp Agent',
   description: 'An agent that can interact with WhatsApp',
   provider: provider,
   memory: memory,
-  database: db
+  database: db,
+  plugins: [pluginManager]
 });
-
-// Add WhatsApp plugin tools to the agent
-whatsAppPlugin.getTools().forEach(tool => agent.addTool(tool));
 ```
 
 ## Available Tools
